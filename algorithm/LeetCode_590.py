@@ -33,7 +33,7 @@ class Solution:
     @classmethod
     def iteration(cls, root: Node, res: List[int]):
         """
-            先根右左 输出 然后反转  
+            先根右左 输出 然后反转
         """
         stack = [root]
 
