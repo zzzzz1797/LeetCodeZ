@@ -20,20 +20,20 @@ class Solution:
             针对于每根柱子 找到左边最高的柱子，然后在找到右边最高的柱子， 如果这两个柱子中的最小值 比当前柱子要大，
         """
         res = 0
-        height_nums = len(height)
+        height_len = len(height)
 
-        for index in range(height_nums):
+        for index in range(height_len):
             max_left = max_right = 0
-            # 寻找左边的最高的柱子
+
+            # 找左边最大的柱子
             for left_index in range(0, index):
                 max_left = max(max_left, height[left_index])
-
-            # 寻找右边最高的柱子
-            for right_index in range(index, height_nums):
+            # 找右边最大的柱子
+            for right_index in range(index + 1, height_len - 1):
                 max_right = max(max_right, height[right_index])
 
-            tmp_res = min(max_left, max_right) - height[index]
-            res += height_nums if tmp_res > 0 else 0
+            if min(max_left, max_right) > height[index]:
+                res += min(max_left, max_right) - height[index]
         return res
 
     @classmethod
