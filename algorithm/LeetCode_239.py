@@ -58,10 +58,9 @@ class Solution:
                     dq.pop()
 
                 while dq and dq[0] <= index - k:
-                    print(index - k, dq[0])
                     # 该元素已经被淘汰了
                     dq.popleft()
-            
+
                 dq.append(index)
                 if index >= k - 1:
                     res.append(nums[dq[0]])
