@@ -74,5 +74,5 @@ class Solution:
             for i in range(row_len):
                 for j in range(col_len):
                     table[j] = 0 if obstacleGrid[i][j] == 1 else table[j - 1] + table[j]
-            res = table[-1]
+            res = table[-2]
         return res

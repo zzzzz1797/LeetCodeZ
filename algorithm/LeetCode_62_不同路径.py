@@ -27,7 +27,7 @@ class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
 
         # return self.recursive_use_memo(m, n, {})
-        return self.dp(m, n)
+        return self.dp_2(m, n)
 
     @classmethod
     def recursive_use_memo(cls, m: int, n: int, memo: Dict) -> int:
@@ -48,7 +48,16 @@ class Solution:
         return memo[(m, n)]
 
     @classmethod
-    def dp(cls, m: int, n: int) -> int:
+    def dp_2(cls, m: int, n: int) -> int:
+        table = [1] * n
+        for i in range(1, m):
+            for j in range(1, n):
+                table[j] = table[j - 1] + table[j]
+
+        return table[-1]
+
+    @classmethod
+    def dp_1(cls, m: int, n: int) -> int:
         """
             时间复杂度：O(m*n)
             空间复杂度： O(1)
