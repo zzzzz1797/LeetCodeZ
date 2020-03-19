@@ -28,39 +28,77 @@
 
         输出: 0
 """
-from collections import defaultdict
+from collections import deque
 from typing import List
 
 
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        return self.BFS(beginWord, endWord, wordList)
+        return self.two_end_bfs(beginWord, endWord, wordList)
 
     @classmethod
-    def BFS(cls, beginWord: str, endWord: str, wordList: List[str]) -> int:
+    def two_end_bfs(cls, begin_word: str, end_word: str, word_list: List[str]) -> int:
+        """
+            双向BFS 其实就是多加一个queue 从两头开始遍历
+        """
+
+        if end_word not in word_list:
+            return 0
+
+        word_dict = dict()
+        begin_word_len = len(begin_word)
+        for word in word_list:
+            for i in range(begin_word_len):
+                key = word[:i] + "*" + word[i + 1:]
+                word_dict[key] = word_dict.get(key, []) + [word]
+
+        start_queue = [begin_word]
+        end_queue = [end_word]
+        visited = {}
         res = 0
+        while start_queue:
+            res += 1
+            tmp_queue = []
 
-        if beginWord and endWord and wordList and endWord in wordList:
+            for word in start_queue:
+                for i in range(begin_word_len):
+                    blur_word = word[:i] + "*" + word[i + 1:]
+                    for tmp_word in word_dict.get(blur_word, []):
+                        if tmp_word in end_queue:
+                            return res + 1
 
-            # 转换一下
-            beginWord_len = len(beginWord)
-            all_combo_dict = defaultdict(list)
-            for word in wordList:
-                for index in range(beginWord_len):
-                    all_combo_dict[word[:index] + "*" + word[index + 1:]].append(word)
+                        if tmp_word not in visited:
+                            visited[tmp_word] = True
+                            tmp_queue.append(tmp_word)
 
-            # BFS
-            queue = [(beginWord, 1)]
-            visited = {beginWord: True}
+            start_queue = tmp_queue
+            if len(start_queue) > len(end_queue):
+                start_queue, end_queue = end_queue, start_queue
+        return 0
 
-            while queue:
-                current_word, current_level = queue.pop(0)
+    @classmethod
+    def bfs(cls, begin_word: str, end_word: str, word_list: List[str]) -> int:
 
-                for index in range(beginWord_len):
-                    for word in all_combo_dict[current_word[:index] + "*" + current_word[index + 1:]]:
-                        if word == endWord:
-                            return current_level + 1
-                        if word not in visited:
-                            visited[word] = True
-                            queue.append((word, current_level + 1))
+        word_dict = dict()
+        begin_word_len = len(begin_word)
+
+        for word in word_list:
+            for i in range(begin_word_len):
+                key = word[:i] + "*" + word[i + 1:]
+                word_dict[key] = word_dict.get(key, []) + [word]
+
+        queue = deque([(begin_word, 1)])
+        visited = {}
+        res = 0
+        while queue:
+            cur_word, cur_res = queue.popleft()
+
+            for i in range(begin_word_len):
+                blur_word = cur_word[:i] + "*" + cur_word[i + 1:]
+                for word in word_dict.get(blur_word, []):
+                    if word == end_word:
+                        return cur_res + 1
+                    if word not in visited:
+                        queue.append((word, cur_res + 1))
+                        visited[word] = True
         return res

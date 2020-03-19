@@ -20,7 +20,6 @@
     对于上面这个给定的矩阵, 返回 0。
     注意: 给定的矩阵grid 的长度和宽度都不超过 50。
 """
-from collections import deque
 from typing import List
 
 
@@ -33,29 +32,32 @@ class Solution:
         """
         深度优先遍历
 
-            时间复杂度：O(R * C)。其中 RR 是给定网格中的行数，CC 是列数。我们访问每个网格最多一次。
-            空间复杂度：O(R * C)，递归的深度最大可能是整个网格的大小，因此最大可能使用 O(R * C)O(R∗C) 的栈空间。
+            时间复杂度：O(R * C)。其中 R 是给定网格中的行数，C 是列数。我们访问每个网格最多一次。
+            空间复杂度：O(R * C)，递归的深度最大可能是整个网格的大小，因此最大可能使用 O(R * C)的栈空间。
             每次从当前位置的对应的上下左右触发，如果碰到不符合条件的返回0
         """
-        def helper(i, j):
-            if i < 0 or j < 0 or i == len(grid) or j == len(grid[0]) or grid[i][j] == 0:
+
+        def helper(row_index: int, col_index: int) -> int:
+            # terminator
+            if not Solution.check_row_and_col_invalid(grid, row_index, col_index):
                 return 0
 
-            grid[i][j] = 0
-            ans = 1
-            for tmp_i, tmp_j in ((-1, 0), (1, 0), (0, 1), (0, -1)):
-                new_i = i + tmp_i
-                new_j = j + tmp_j
-                ans += helper(new_i, new_j)
-            return ans
+            # 这组下标的内容置成0
+            grid[row_index][col_index] = 0
+
+            ret = 1
+            for tmp_row_index, tmp_col_index in ((1, 0), (-1, 0), (0, -1), (0, 1)):
+                new_row_index = row_index + tmp_row_index
+                new_col_index = col_index + tmp_col_index
+
+                if Solution.check_row_and_col_invalid(grid, new_row_index, new_col_index):
+                    ret += helper(new_row_index, new_col_index)
+            return ret
 
         res = 0
-        if grid:
-            m = len(grid)
-            n = len(grid[0])
-            for row in range(m):
-                for col in range(n):
-                    res = max(res, helper(row, col))
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                res = max(res, helper(i, j))
         return res
 
     @classmethod
@@ -66,23 +68,30 @@ class Solution:
         """
         res = 0
 
-        m = len(grid)
-        n = len(grid[0])
-
-        for i in range(m):
-            for j in range(n):
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
                 cur = 0
-                q = deque([(i, j)])
-                while q:
-                    cur_i, cur_j = q.popleft()
-                    if cur_i < 0 or cur_j < 0 or cur_i == m or cur_j == n or grid[cur_i][cur_j] == 0:
-                        continue
-                    cur += 1
-                    grid[cur_i][cur_j] = 0
+                queue = [(i, j)]
+                while queue:
+                    cur_i, cur_j = queue.pop()
+                    if cls.check_row_and_col_invalid(grid, cur_i, cur_j):
+                        grid[cur_i][cur_j] = 0
+                        cur += 1
 
-                    for tmp_i, tmp_j in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        next_i = tmp_i + cur_i
-                        next_j = tmp_j + cur_j
-                        q.append((next_i, next_j))
-                res = max(res, cur)
+                        for tmp_i, tmp_j in ((1, 0), (-1, 0), (0, -1), (0, 1)):
+                            new_i = cur_i + tmp_i
+                            new_j = cur_j + tmp_j
+                            queue.append((new_i, new_j))
+                res = max(cur, res)
+        return res
+
+    @classmethod
+    def check_row_and_col_invalid(cls, grid: List[List[int]], row_index: int, col_index: int) -> bool:
+        res = False
+
+        row_len = len(grid)
+        col_len = len(grid[0]) if grid else 0
+
+        if 0 <= row_index < row_len and 0 <= col_index < col_len and grid[row_index][col_index] == 1:
+            res = True
         return res
