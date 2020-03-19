@@ -19,30 +19,11 @@
         1 <= words.length <= 1000
         1 <= words[i].length, chars.
 """
-from typing import List, Dict
+from collections import Counter
+from typing import List
 
 
 class Solution:
     def countCharacters(self, words: List[str], chars: str) -> int:
-        # 1. 转换chars为一个哈希表 key 为char value为cnt
-        chars_cnt_dict = self.word_cnt_statistics(chars)
-
-        # 2. 遍历words 判断word 是否可以由chars_cnt_dict 组成
-        res = 0
-        for word in words:
-            word_cnt_dict = self.word_cnt_statistics(word)
-            flag = True
-            for char in word:
-                if word_cnt_dict[char] > chars_cnt_dict.get(char, 0):
-                    flag = False
-                    break
-            if flag:
-                res += len(word)
-        return res
-
-    @classmethod
-    def word_cnt_statistics(cls, word: str) -> Dict[str, int]:
-        chars_cnt_dict = {}
-        for char in word:
-            chars_cnt_dict[char] = chars_cnt_dict.get(char, 0) + 1
-        return chars_cnt_dict
+        char_dict = Counter(chars)
+        return sum([not (Counter(word) - char_dict) and len(word) for word in words])
