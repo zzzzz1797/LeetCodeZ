@@ -17,3 +17,10 @@
     +---------------------+
  */
 
+
+/*
+
+    IFNULL 用于判断第一个表达式是否是NULL，如果是NULL，则返回第二个值
+    IFULLE(expression , NULL)
+ */
+select ifnull ((select distinct  Salary from Employee order by Salary limit 1 offset 1), null) as SecondHighestSalary;
