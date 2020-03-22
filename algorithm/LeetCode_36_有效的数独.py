@@ -17,44 +17,39 @@ from typing import List
 
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
-
-        # 1. 初始化数据
-        rows, cols, blocks = self.init_data()
-
-        # 2. 循环遍历board
-        for i in range(9):
-            for j in range(9):
-                num = board[i][j]
-                if num != ".":
-                    # 表示需要验证这个数字
-
-                    # 将获取块索引的计算抽出来作为一个方法
-                    block_index = self.get_block_index(i, j)
-
-                    rows[i][num] = rows[i].get(num, 0) + 1
-                    cols[j][num] = cols[j].get(num, 0) + 1
-                    blocks[block_index][num] = blocks[block_index].get(num, 0) + 1
-
-                    # 判断上述赋值操作之后得到的结果是否合法
-                    if rows[i][num] > 1 or cols[j][num] > 1 or blocks[block_index][num] > 1:
-                        return False
-        return True
-
-        pass
-
-    @classmethod
-    def init_data(cls):
+        """
+            条件：
+                1、一行内不能出现重复的数字
+                2、一列内不能出现重复的数字
+                3、一块内不能出现重复的数字（row //3） 3 + col
+        """
+        # 先生成三个set
+        m = len(board)
+        blocks = []
         rows = []
         cols = []
-        blocks = []
+        for i in range(m):
+            blocks.append(set())
+            rows.append(set())
+            cols.append(set())
 
-        for i in range(9):
-            rows.append({})
-            cols.append({})
-            blocks.append({})
+        for i in range(m):
+            for j in range(m):
+                check_num = board[i][j]
+                if check_num != ".":
+                    block_size = self.find_block_index(i, j)
 
-        return rows, cols, blocks
+                    block_set = blocks[block_size]
+                    row_set = rows[i]
+                    col_set = cols[j]
 
-    @classmethod
-    def get_block_index(cls, row_index, col_index) -> int:
+                    if check_num in block_set or check_num in row_set or check_num in col_set:
+                        return False
+
+                    block_set.add(check_num)
+                    row_set.add(check_num)
+                    col_set.add(col_set)
+
+    @staticmethod
+    def find_block_index(row_index, col_index) -> int:
         return (row_index // 3) * 3 + col_index // 3
