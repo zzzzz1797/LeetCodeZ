@@ -37,10 +37,10 @@ class Solution:
         if x + y < z:
             return False
 
-        if x == 0 or y == 0:
+        if x == 0 or y == 0 or z == 0:
             return x + y == z or z == 0
 
-        return z % god(x, y) == 0 if x > y else z % god(y, x) == 0
+        return z % god(x, y) == 0
 
     @classmethod
     def use_dfs_by_stack(cls, x: int, y: int, z: int) -> bool:
