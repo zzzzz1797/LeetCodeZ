@@ -71,7 +71,7 @@ class Solution:
         nums_len = len(nums)
         if nums_len:
             first = 0
-            second = nums[1]
+            second = 0
 
             for i in range(1, nums_len + 1):
                 second, first = max(second, first + nums[i - 1]), second
