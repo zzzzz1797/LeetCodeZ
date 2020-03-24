@@ -43,7 +43,7 @@ from typing import List
 
 class Solution:
     def massage(self, nums: List[int]) -> int:
-        return self.solve_1(nums)
+        return self.solve_2(nums)
 
     @classmethod
     def solve_1(cls, nums: List[int]) -> int:
@@ -71,12 +71,12 @@ class Solution:
         nums_len = len(nums)
         if nums_len:
             first = 0
-            second = 0
+            second = nums[0]
 
-            for i in range(1, nums_len + 1):
+            for i in range(2, nums_len + 1):
                 second, first = max(second, first + nums[i - 1]), second
             return second
 
 
 if __name__ == "__main__":
-    print(Solution().massage([]))
+    print(Solution().massage([1,2,3,1]))
