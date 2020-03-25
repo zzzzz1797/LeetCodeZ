@@ -23,8 +23,8 @@
 """
 
 
-class DLinkNode:
-    def __init__(self, key=None, value=None):
+class DoubleLinkNode:
+    def __init__(self, key: int = None, value: int = None):
         self.key = key
         self.value = value
         self.prev = None
@@ -34,65 +34,79 @@ class DLinkNode:
 class LRUCache:
 
     def __init__(self, capacity: int):
-        self.capacity = capacity  # 缓存的容量
-        self.size = 0  # 缓存当前所用容量
-        self.cache = {}  # 用来保存 节点信息
-        self.head = DLinkNode()  # 头节点信息 只是一个哑节点 可以省略判断None的逻辑
-        self.tail = DLinkNode()  # 尾节点信息 同上
+        self.capacity = capacity
+        # 实际用量
+        self.size = 0
+        # 头节点（哑节点）
+        self.head = DoubleLinkNode()
+        # 尾节点（哑节点）
+        self.tail = DoubleLinkNode()
+        # 字典 存储key和node之间的映射关系
+        self.mapping = {}
 
         self.head.next = self.tail
         self.tail.prev = self.head
 
     def get(self, key: int) -> int:
-        node = self.cache.get(key)
+        node = self.mapping.get(key)
+
         if not node:
             return -1
 
-        self._move_to_head(node)  # 将这个节点移动到头节点去
+        # 1.删除node
+        self.remove_node(node)
+        # 2.将node插入到头部
+        self.add_to_head(node)
         return node.value
 
     def put(self, key: int, value: int) -> None:
-        node = self.cache.get(key)
+        node = self.mapping.get(key)
 
         if not node:
-            # 是一个新的节点
-            node = DLinkNode(key, value)
-            self.cache[key] = node
-            self._add_to_head(node)
+            # 说明是一个新的key
+            node = DoubleLinkNode(key, value)
+            self.mapping[key] = node
+            self.add_to_head(node)
+
+            # 更新实际用量
             self.size += 1
 
+            # 判断是否需要更新整个链表
             if self.size > self.capacity:
-                # 弹出最后一个节点
-                tail_node = self._pop_tail_node()
+                # 弹出做后一个节点
+                tail_node = self.pop_tail()
+                # 清空mapping
+                del self.mapping[tail_node.key]
                 self.size -= 1
-                del self.cache[tail_node.key]
         else:
-            # 将这个节点移动到头节点去
+            # 更新节点信息
             node.value = value
-            self._move_to_head(node)
-
-    def _add_to_head(self, node: DLinkNode):
-        node.prev = self.head
-        node.next = self.head.next
-        self.head.next.prev = node
-        self.head.next = node
-
-    def _pop_tail_node(self):
-        node = self.tail.prev
-        self.remove_node(node)
-        return node
-
-    def _move_to_head(self, node):
-        self.remove_node(node)
-        self._add_to_head(node)
+            self.remove_node(node)
+            self.add_to_head(node)
 
     @classmethod
-    def remove_node(cls, node: DLinkNode):
-        """
-        删除一个节点
-        """
+    def remove_node(cls, node: DoubleLinkNode):
         prev_node = node.prev
         next_node = node.next
 
         prev_node.next = next_node
         next_node.prev = prev_node
+
+    def add_to_head(self, node: DoubleLinkNode):
+        # 取出真正的头节点
+        true_head = self.head.next
+
+        node.prev = self.head
+        node.next = true_head
+
+        self.head.next = node
+        true_head.prev = node
+
+    def pop_tail(self) -> DoubleLinkNode:
+        prev_node = self.tail.prev
+        self.remove_node(prev_node)
+        return prev_node
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
