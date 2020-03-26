@@ -30,31 +30,25 @@ from typing import List
 
 class Solution:
     def surfaceArea(self, grid: List[List[int]]) -> int:
-        pass
-
-    @classmethod
-    def solve_1(cls, grid: List[List[int]]) -> int:
         res = 0
         length = len(grid)
 
         for i in range(length):
             for j in range(length):
-                target = grid[i][j]
-                if target:
-                    res += 2  # 先加上下 两个面积
+                if grid[i][j]:
+                    res += 2
 
-                    # 从四个方位判断侧面积的面积
                     for tmp_i, tmp_j in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                         new_i = i + tmp_i
-                        new_j = i + tmp_j
+                        new_j = j + tmp_j
 
                         if 0 <= new_i < length and 0 <= new_j < length:
                             tmp_res = grid[new_i][new_j]
                         else:
                             tmp_res = 0
-                        res += max(target - tmp_res, 0)
-
+                        res += max(0, grid[i][j] - tmp_res)
         return res
+
 
 
 if __name__ == '__main__':

@@ -14,52 +14,45 @@ from typing import List
 
 class Solution:
     def numRookCaptures(self, board: List[List[str]]) -> int:
-        return self.solve_1(board)
+        """
+            R 代表车
+            B 代表白旗
+            p 代表卒
 
-    @classmethod
-    def solve_1(cls, board: List[List[str]]) -> int:
-        # 定义车的位置 和捕获到卒 的数量
-        i = j = cnt = 0
+            1、遇到B，停止
+            2、吃掉一个p，停止
+        """
+        # 1、初始化变量
+        row_index = col_index = None
+        cnt = 0
 
-        # 获取棋盘的长度
+        # 找到i j 的位置
         length = len(board)
-
-        # 找出车的位置
-        for row in range(length):
-            for col in range(length):
-                if board[row][col] == "R":
-                    i = row
-                    j = col
+        for i in range(length):
+            for j in range(length):
+                if board[i][j] == 'R':
+                    row_index = i
+                    col_index = j
                     break
+            else:
+                continue
 
-        # 从四个方向出发 判断车可以搞到多少卒
-        for tmp_i, tmp_j in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            new_i = i
-            new_j = j
+        # 从上下左右四个方位开始找
+        for i, j in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             step = 0
             while True:
+                new_i = row_index + i * step
+                new_j = col_index + j * step
 
-                print(new_i, new_j)
                 if not (0 <= new_i < length and 0 <= new_j < length):
                     break
-                target = board[new_i][new_j]
-                if target == "B":
+
+                if board[new_i][new_j] == "B":
                     break
 
-                if target == "p":
+                if board[new_i][new_j] == "p":
                     cnt += 1
                     break
 
-                new_i = tmp_i * step + i
-                new_j = tmp_j * step + j
                 step += 1
         return cnt
-
-
-if __name__ == '__main__':
-    b = [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "p", ".", ".", ".", "."],
-         [".", ".", ".", "R", ".", ".", ".", "p"], [".", ".", ".", ".", ".", ".", ".", "."],
-         [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "p", ".", ".", ".", "."],
-         [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]]
-
-    print(Solution.solve_1(b))
