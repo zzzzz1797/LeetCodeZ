@@ -15,9 +15,10 @@ from typing import List
 
 
 def bubble_sort(data: List[int]) -> List[int]:
-    data_length = len(data)
-    for i in range(data_length):
-        for j in range(data_length - 1):
+    data_len = len(data)
+
+    for i in range(data_len):
+        for j in range(data_len - i - 1):
             if data[j] > data[j + 1]:
                 data[j], data[j + 1] = data[j + 1], data[j]
     return data

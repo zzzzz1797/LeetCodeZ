@@ -18,17 +18,13 @@ from typing import List
 
 
 def select_sort(data: List[int]) -> List[int]:
-    data_length = len(data)
-
-    for i in range(data_length):
+    data_len = len(data)
+    for i in range(data_len):
         min_index = i
-
-        for j in range(i, data_length):
+        for j in range(i + 1, data_len):
             if data[min_index] > data[j]:
                 min_index = j
-
         data[i], data[min_index] = data[min_index], data[i]
-
     return data
 
 

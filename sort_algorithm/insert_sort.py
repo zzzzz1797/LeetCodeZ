@@ -23,11 +23,9 @@ def insert_sort(data: List[int]) -> List[int]:
 
     for i in range(1, data_len):
         for j in range(i, 0, -1):
-            # 从后向前遍历
-            if data[j] < data[j - 1]:
-                data[j], data[j - 1] = data[j - 1], data[j]
+            if params[j] < params[j - 1]:
+                params[j], params[j - 1] = params[j - 1], params[j]
             else:
-                # 这里可以提前结束，因为如果data[j]大于data[j-1]，则j-1之前的数据肯定都比j小
                 break
     return data
 
