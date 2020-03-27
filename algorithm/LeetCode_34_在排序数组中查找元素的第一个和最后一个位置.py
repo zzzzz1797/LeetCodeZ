@@ -18,6 +18,10 @@ from typing import List
 
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
+        """
+            时间复杂度：O(logn)
+            空间复杂度：O(1)
+        """
         res = [-1, -1]
         nums_len = len(nums)
 
