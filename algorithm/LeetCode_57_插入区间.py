@@ -19,6 +19,16 @@ class Solution:
         """
             时间复杂度：O(n)
             空间复杂度：O(n)
+            思路：
+                1、初始化一个结果集。
+                2、循环遍历intervals，如果结果集为空，则将当前元素插入到结果集中。
+                3、如果结果集有元素，则取出来和当前元素比较是否可以合并，如果可以合并替换结果集元素的内容，否则将当前元素追加到结果集中。
+                4、如果newInterval有值，则将结果集中的做后一个元素取出来和newInterval做比较。
+                5、如果newInterval和最后一个元素有交集，则合并。
+                6、如果newInterval和最后一个元素没有交集，则判断newInterval是否整体小于最后一个元素，如果小于就插入到最后一个元素前面。否则跳过
+                7、如果将newInterval添加到结果集了，就将newInterval置成空。
+                8、最后返回时，需要判断是否有newInterval就加intervals追加到res后面，因为如果有说明newInterval很大或者 intervals是空。
+                9、整体思路解说
         """
         res = []
 
@@ -27,13 +37,12 @@ class Solution:
             for start, end in intervals:
                 if not res:
                     res.append([start, end])
-
-                check_start, check_end = res[-1]
-
-                if check_start <= start <= check_end:
-                    res[-1] = [min(start, check_start), max(end, check_end)]
                 else:
-                    res.append([start, end])
+                    check_start, check_end = res[-1]
+                    if check_start <= start <= check_end:
+                        res[-1] = [min(start, check_start), max(end, check_end)]
+                    else:
+                        res.append([start, end])
 
                 if newInterval:
                     check_start, check_end = res[-1]
@@ -41,7 +50,7 @@ class Solution:
                     tmp_start, tmp_end = newInterval
 
                     if check_start <= tmp_start <= check_end or tmp_start <= check_start <= tmp_end:
-                        # 比较一下目标数组 是否在数组中
+                        # TODO 比较一下目标数组 是否在数组中  这里是关键
                         newInterval = []
                         info = [min(tmp_start, check_start), max(tmp_end, check_end)]
                         if res:
@@ -49,13 +58,16 @@ class Solution:
                         else:
                             res.append(info)
                     else:
-                        # 可能目标数组远远小于最后一个
+                        # TODO 可能目标数组远远小于最后一个，这一步也不能少
                         if tmp_end < check_start:
-                            res.insert(-1, [tmp_start, tmp_end])
+                            # res.insert(-1, [tmp_start, tmp_end])  insert 时间复杂度O(n) append 是O(1)
+
+                            tmp_info = res[-1]
+                            res[-1] = [tmp_start, tmp_end]
+                            res.append(tmp_info)
                             newInterval = []
 
         return res + [newInterval] if newInterval else res
-
 
 # if __name__ == '__main__':
 #     print(Solution().insert([[1, 5]], [0, 0]))

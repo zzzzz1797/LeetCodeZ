@@ -18,9 +18,8 @@ from typing import List
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         """
-             时间复杂度：O(nlogn)
-             空间复杂度：O(n)
-
+            时间复杂度：O(nlogn)
+            空间复杂度：O(n)
         """
         res = []
         if intervals:
