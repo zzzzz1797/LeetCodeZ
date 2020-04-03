@@ -15,6 +15,7 @@ from typing import List
 
 class Solution:
     def minArray(self, numbers: List[int]) -> int:
+        """时间复杂度：O(logn) 空间复杂度：O(1)"""
         start = 0
         end = len(numbers) - 1
 
