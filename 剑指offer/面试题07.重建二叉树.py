@@ -32,4 +32,17 @@ class Solution:
     """
 
     def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
-        pass
+        in_dict = {num: index for index, num in enumerate(inorder)}
+
+        def helper(pre_index, in_start, in_end):
+            if in_start > in_end:
+                return None
+
+            root_node = TreeNode(preorder[pre_index])
+            in_index = in_dict[root_node.val]
+
+            root_node.left = helper(pre_index + 1, in_start, in_index - 1)
+            root_node.right = helper(in_index - in_start + pre_index + 1, in_index + 1, in_end)
+            return root_node
+
+        return helper(0, 0, len(inorder) - 1)
