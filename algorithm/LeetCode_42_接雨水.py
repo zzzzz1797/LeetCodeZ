@@ -39,30 +39,24 @@ class Solution:
     @classmethod
     def dp(cls, height: List[int]) -> int:
         res = 0
-        if height:
-            height_nums = len(height)
+        if len(height) >= 3:
+            size = len(height)
 
-            max_left_info = [0] * height_nums
-            max_right_info = [0] * height_nums
+            max_left_list = [0] * size
+            max_right_list = [0] * size
+            max_left_list[0] = height[0]
+            max_right_list[-1] = height[-1]
 
-            max_left_info[0] = height[0]
-            max_right_info[height_nums - 1] = height[height_nums - 1]
+            for i in range(1, size):
+                max_left_list[i] = max(max_left_list[i - 1], height[i])
 
-            # 先循环遍历依次请求左边的最高柱子
-            for index in range(1, height_nums):
-                max_left_info[index] = max(height[index], max_left_info[index - 1])
+            for j in range(size - 2, -1, -1):
+                max_right_list[j] = max(max_right_list[j + 1], height[j])
 
-            # 从倒数第二个开始遍历 依次获取右边最高的柱子
-            for index in range(height_nums - 2, -1, -1):
-                max_right_info[index] = max(height[index], max_right_info[index + 1])
+            for c in range(1, size - 1):
+                target = min(max_right_list[c], max_left_list[c]) - height[c]
+                res += 0 if target <= 0 else target
 
-            for index in range(height_nums):
-                max_left = max_left_info[index]
-                max_right = max_right_info[index]
-
-                check_info = min(max_right, max_left)
-                if check_info > height[index]:
-                    res += (check_info - height[index])
         return res
 
     @classmethod
@@ -92,4 +86,4 @@ class Solution:
 
 
 if __name__ == '__main__':
-    print(Solution().dp([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
+    print(Solution().dp([4, 3, 1, 0, 1, 2, 4]))
