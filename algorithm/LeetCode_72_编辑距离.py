@@ -34,20 +34,15 @@ class Solution:
         """
             动态规划
             定义状态数组：
-                dp[i][j] 表示对于word1前i个字符和word2前j个字符两者之间的距离。
+                dp[i][j] 表示对于word1前i个字符 转换成 word2前j个字符 的最少操作
             状态转移方程：
-                当word1[i]== word2[j]:   dp[i][j] = min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1])
-                当word1[i]!=word2[j]:    dp[i][j] = min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+1)
+                当word1[i]== word2[j]:   dp[i][j] = dp[i-1][j-1])
+                当word1[i]!=word2[j]:    dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])+1
         """
-        m = len(word1)
-        n = len(word2)
+        m = len(word1) + 1
+        n = len(word2) + 1
 
-        # 特殊判断
-        if m * n == 0:
-            return m + n
-
-        # 初始化一个dp数组
-        dp = [[0] * (n + 1) for i in range(m + 1)]
+        dp = [[0 for i in range(n)] for j in range(m)]
 
         for i in range(m):
             dp[i][0] = i
@@ -55,11 +50,10 @@ class Solution:
         for j in range(n):
             dp[0][j] = j
 
-        # dp logic
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                first = dp[i][j - 1] + 1
-                second = dp[i - 1][j] + 1
-                third = dp[i - 1][j - 1] + (1 if word1[i - 1] != word2[j - 1] else 0)
-                dp[i][j] = min(first, second, third)
-        return dp[m][n]
+        for i in range(1, m):
+            for j in range(1, n):
+                if word1[i - 1] == word2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1]
+                else:
+                    dp[i][j] = min(dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j]) + 1
+        return dp[m - 1][n - 1]
