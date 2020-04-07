@@ -21,6 +21,7 @@ class Solution:
     def cuttingRope(self, n: int) -> int:
         return self.recursive(n)
 
+    @classmethod
     @lru_cache(None)
     def recursive(cls, n: int) -> int:
         """
