@@ -34,7 +34,7 @@ class Solution:
         if n == 2:
             return 1
         res = 0
-        for i in range(1, n):
+        for i in range(3, n):
             res = max(max(i * cls.recursive(n - i), i * (n - i)), res)
         return res
 
@@ -82,4 +82,4 @@ class Solution:
 
 
 if __name__ == '__main__':
-    print(Solution().dp_1(10))
+    print(Solution().recursive(10))
