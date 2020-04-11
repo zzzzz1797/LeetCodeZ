@@ -26,7 +26,7 @@
     1 <= K <= 100
     1 <= N <= 10000
 """
-from typing import Dict, Tuple
+from functools import lru_cache
 
 
 class Solution:
@@ -34,39 +34,36 @@ class Solution:
         """
             k 表示鸡蛋的个数
             n 表示楼的层数
-
         """
-        memo = {}
-        return self.recursive_and_mid_search(K, N, memo)
+
+        return self.recursive(K, N)
 
     @classmethod
-    def recursive_and_mid_search(cls, K: int, N: int, memo: Dict[Tuple, int]) -> int:
+    @lru_cache(None)
+    def recursive_and_mid_search(cls, K: int, N: int) -> int:
         if K == 1 or N == 0:
             return N
 
         key = (K, N)
-        if key in memo:
-            return memo[key]
 
         res = float("inf")
         lo = 1
         hi = N
         while lo <= hi:
             mid = (lo + hi) // 2
-            broken = cls.recursive_and_mid_search(K - 1, mid - 1, memo)  # 蛋碎了
-            not_broken = cls.recursive_and_mid_search(K, N - mid, memo)  # 蛋没碎
+            broken = cls.recursive_and_mid_search(K - 1, mid - 1)  # 蛋碎了
+            not_broken = cls.recursive_and_mid_search(K, N - mid)  # 蛋没碎
             if broken > not_broken:
                 hi = mid - 1
                 res = min(res, broken + 1)
             else:
                 lo = mid + 1
                 res = min(res, not_broken + 1)
-        memo[key] = res
         return res
 
     @classmethod
-    def recursive(cls, K: int, N: int, memo: Dict[Tuple, int] = None) -> int:
-        memo = memo or {}
+    @lru_cache(None)
+    def recursive(cls, K: int, N: int) -> int:
         # terminator
         if K == 1:
             # 这个时候只能一层一层的去试
@@ -75,18 +72,14 @@ class Solution:
             # 楼层为0了， 则不需要扔鸡蛋了
             return 0
 
-        if (K, N) in memo:
-            return memo[(K, N)]
         # process
         res = float("inf")
         for i in range(1, N + 1):
             res = min(
                 res,
                 max(
-                    cls.recursive(K - 1, i - 1, memo),  # 在第i楼扔了一次，鸡蛋碎了
-                    cls.recursive(K, N - i, memo)  # 在第i楼扔了一次，鸡蛋碎
+                    cls.recursive(K - 1, i - 1, ),  # 在第i楼扔了一次，鸡蛋碎了
+                    cls.recursive(K, N - i)  # 在第i楼扔了一次，鸡蛋碎
                 ) + 1  # +1 表示在第i楼扔过了
             )
-        memo[(K, N)] = res
         return res
-
