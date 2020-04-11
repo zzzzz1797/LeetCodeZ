@@ -1,30 +1,26 @@
 """
-给定一个 没有重复 数字的序列，返回其所有可能的全排列。
-
+    给定一个可包含重复数字的序列，返回所有不重复的全排列。
     示例:
-        输入: [1,2,3]
+        输入: [1,1,2]
         输出:
         [
-          [1,2,3],
-          [1,3,2],
-          [2,1,3],
-          [2,3,1],
-          [3,1,2],
-          [3,2,1]
+          [1,1,2],
+          [1,2,1],
+          [2,1,1]
         ]
 """
-
 from typing import List
 
 
 class Solution:
-    def permute(self, nums: List[int]) -> List[List[int]]:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
         return self.recursive(nums)
 
     @classmethod
     def recursive(cls, nums: List[int]) -> List[List[int]]:
-        """"
-            时间复杂度：应该是O(n!)
+        """
+            时间复杂度：O(n*n!)
+            空间复杂度：O(n*n!)
         """
         res = []
         size = len(nums)
@@ -32,11 +28,22 @@ class Solution:
         def helper(index):
             if index == size:
                 res.append(nums[:])
-
+                return
+            used = {}
             for i in range(index, size):
+                check = nums[i]
+                if used.get(check):
+                    continue
+
+                used[check] = True
                 nums[i], nums[index] = nums[index], nums[i]
                 helper(index + 1)
                 nums[index], nums[i] = nums[i], nums[index]
 
         helper(0)
+
         return res
+
+
+if __name__ == '__main__':
+    print(Solution.recursive([1, 1, 2]))
