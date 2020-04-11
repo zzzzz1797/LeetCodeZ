@@ -102,3 +102,31 @@ class Solution:
                         queue.append((word, cur_res + 1))
                         visited[word] = True
         return res
+
+    @classmethod
+    def bfs_2(cls, begin_word: str, end_word: str, word_list: List[str]) -> int:
+        word_dict = dict()
+        word_len = len(begin_word)
+
+        for word in word_list:
+            for i in range(word_len):
+                key = word[:i] + "*" + word[i + 1:]
+                word_dict[key] = word_dict.get(key, []) + [word]
+
+        queue = [(begin_word, 1)]
+        visited = set()
+        res = 0
+
+        while queue:
+            tmp_queue = []
+            for cur_word, cur_level in queue:
+                for i in range(word_len):
+                    blur_word = cur_word[:i] + "*" + cur_word[i + 1:]
+                    for word in word_dict.get(blur_word, []):
+                        if word == end_word:
+                            return cur_level + 1
+                        if word not in visited:
+                            tmp_queue.append((word, cur_level + 1))
+                            visited.add(word)
+            queue = tmp_queue
+        return res
