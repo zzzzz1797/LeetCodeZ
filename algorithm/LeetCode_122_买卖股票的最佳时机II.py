@@ -26,7 +26,7 @@ from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        pass
+        return self.greedy(prices)
 
     @classmethod
     def dp_1(cls, prices: List[int]) -> int:
@@ -34,8 +34,17 @@ class Solution:
             dp[i][j]
             i 表示 第i天能获得的最大的利润
             j 取值 0， 1
-                0 代表 第i天时，手里拿的是现金  可以理解没有持有该股票
-                1 代表 第i天时，手里拿的是股票            持有该股票
+                0 代表 第i天时，不持有
+                1 代表 第i天时，持有
+
+                dp[i][0] 表示第i天不持有，则有两种情况
+                    1、第i-1天就不持有
+                    2、第i-1天持有，但是第i天卖了
+                    取两者之间的最大值就是dp[i][0]的最大利润
+
+                dp[i][1] 表示第i天持有，两种情况
+                    1、第i-1天就持有
+                    2、第i-1天不持有，但是第i天买了
         """
         res = 0
         if size := len(prices):

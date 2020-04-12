@@ -29,28 +29,25 @@ class Solution:
             空间复杂度：O(n)
         """
         res = 0
+        min_price = float("inf")
+        dp = [0] * len(prices)
 
-        if prices:
-            size = len(prices)
-            dp = [0] * size
-            min_price = float("inf")
+        for index, price in enumerate(prices):
+            min_price = min(price, min_price)
+            if index != 0:
+                dp[index] = max(dp[index - 1], price - min_price)
 
-            for i in range(size):
-                min_price = min(min_price, prices[i])
-                dp[i] = max(dp[i], prices[i] - min_price)
-                res = max(res, dp[i])
+            res = max(res, dp[index])
         return res
 
     @classmethod
     def dp_2(cls, prices: List[int]) -> int:
-        res = 0
+        res = second = 0
         first = float("inf")
-        size = len(prices)
-        second = 0
 
-        for i in range(size):
-            first = min(prices[i], first)
-            second = max(second, prices[i] - first)
+        for price in prices:
+            first = min(first, price)
+            second = max(second, price - first)
             res = max(res, second)
         return res
 
