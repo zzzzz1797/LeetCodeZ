@@ -89,31 +89,31 @@ class Solution:
                 if j + 1 < col_size:
                     dp[i][j] = min(dp[i][j], dp[i][j + 1] + 1)
         return dp
-
-    @classmethod
-    def dfs(cls, matrix: List[List[int]]) -> List[List[int]]:
-        row_size = len(matrix)
-        col_size = len(matrix)
-        res = [[float("inf") for i in range(col_size)] for i in range(row_size)]
-
-        def helper(x, y, distance, visited) -> int:
-            if matrix[x][y] == 0:
-                return distance
-
-            tmp_res = float("inf")
-            for new_x, new_y in cls.direction:
-                dx = new_x + x
-                dy = new_y + y
-
-                if 0 <= dx < row_size and 0 <= dy < col_size and (dx, dy) not in visited:
-                    visited.add((dx, dy))
-                    tmp_res = min(tmp_res, helper(dx, dy, distance + 1, visited))
-            return tmp_res
-
-        for i in range(row_size):
-            for j in range(col_size):
-                res[i][j] = helper(i, j, 0, set())
-        return res
+    #
+    # @classmethod
+    # def dfs(cls, matrix: List[List[int]]) -> List[List[int]]:
+    #     row_size = len(matrix)
+    #     col_size = len(matrix[0])
+    #     res = [[float("inf") for i in range(col_size)] for i in range(row_size)]
+    #
+    #     def helper(x, y, distance, visited) -> int:
+    #         if matrix[x][y] == 0:
+    #             return distance
+    #
+    #         tmp_res = float("inf")
+    #         for new_x, new_y in cls.direction:
+    #             dx = new_x + x
+    #             dy = new_y + y
+    #
+    #             if 0 <= dx < row_size and 0 <= dy < col_size and (dx, dy) not in visited:
+    #                 visited.add((dx, dy))
+    #                 tmp_res = min(tmp_res, helper(dx, dy, distance + 1, visited))
+    #         return tmp_res
+    #
+    #     for i in range(row_size):
+    #         for j in range(col_size):
+    #             res[i][j] = helper(i, j, 0, set())
+    #     return res
 
 
 if __name__ == '__main__':
