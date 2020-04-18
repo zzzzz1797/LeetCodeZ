@@ -53,7 +53,7 @@ class Solution:
             fast_node = fast_node.next.next
 
         if prev_node:
+            # 将链表从左侧断开
             prev_node.next = None
 
         return slow_node
-
