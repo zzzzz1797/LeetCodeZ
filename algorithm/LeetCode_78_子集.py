@@ -22,32 +22,55 @@ from typing import List
 
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        res = []
-        if nums:
-            # self.DFS(res, nums, [], 0)
-            self.iteration(res, nums)
+        return self.iteration(nums)
+
+    @classmethod
+    def iteration(cls, nums: List[int]) -> List[List[int]]:
+        res = [[]]
+        for num in nums:
+            tmp_info = []
+            for tmp in res:
+                tmp_info.append(tmp + [num])
+            res.extend(tmp_info)
         return res
 
     @classmethod
-    def iteration(cls, res: List[List[int]], nums: List):
-        res.append([])
-        for num in nums:
-            res.extend([tmp + [num] for tmp in res])
+    def recursive(cls, nums: List[int]) -> List[List[int]]:
+        res = []
+        size = len(nums)
+
+        def helper(index: int, tmp_res: List[int]):
+            if index == size:
+                res.append(tmp_res[:])
+                return
+
+            helper(index + 1, tmp_res)
+
+            tmp_res.append(nums[index])
+            helper(index + 1, tmp_res)
+            tmp_res.pop()
+
+        helper(0, [])
+        return res
 
     @classmethod
-    def DFS(cls, res: List[List[int]], nums: List[int], tmp_res: List[int], index: int):
-        # terminator
-        if index == len(nums):
-            res.append(tmp_res[:])
-            return
+    def recursive_1(cls, nums: List[int]) -> List[List[int]]:
+        res = []
+        size = len(nums)
 
-        # process
-        # 不选这个数
-        cls.DFS(res, nums, tmp_res, index + 1)
+        def helper(index, tmp_res):
+            res.append(tmp_res)
+            if index == size:
+                return
 
-        # 选这个数
-        tmp_res.append(nums[index])
-        cls.DFS(res, nums, tmp_res, index + 1)
+            for i in range(index, size):
+                helper(i + 1, tmp_res + [nums[i]])
 
-        # reverse state
-        tmp_res.pop()
+        helper(0, [])
+        return res
+
+
+if __name__ == '__main__':
+    print(Solution().iteration([1, 2, 3]))
+    print(Solution().recursive([1, 2, 3]))
+    print(Solution().recursive_1([1, 2, 3]))
