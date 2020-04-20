@@ -13,7 +13,6 @@
             nums2 = [2,5,6],       n = 3
 
         输出: [1,2,2,3,5,6]
-    https://leetcode-cn.com/problems/merge-sorted-array
 """
 
 from typing import List
@@ -24,10 +23,18 @@ class Solution:
         """
         Do not return anything, modify nums1 in-place instead.
         """
+        self.solve_1(nums1, m, nums2, n)
+
+    @classmethod
+    def solve_1(cls, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+            思路：
+                1、m+n就是nums1最终的位置
+                2、两个列表都从后往前开始合并
+        """
         last_index = m + n - 1
         m = m - 1
         n = n - 1
-
         while m >= 0 and n >= 0:
             if nums1[m] > nums2[n]:
                 nums1[last_index] = nums1[m]
@@ -38,12 +45,3 @@ class Solution:
             last_index -= 1
 
         nums1[:n + 1] = nums2[:n + 1]
-
-
-if __name__ == "__main__":
-    n1 = [1, 2, 3, 0, 0, 0]
-    n2 = [2, 5, 6]
-
-    Solution().merge(n1, 3, n2, 3)
-
-    print(n1)
