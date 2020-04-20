@@ -23,6 +23,8 @@ from typing import List
 
 
 class Solution:
+    DIRECTION = ((1, 0), (-1, 0), (0, 1), (0, -1))
+
     def numIslands(self, grid: List[List[str]]) -> int:
         return self.bfs(grid)
 
@@ -76,32 +78,51 @@ class Solution:
                 2）如果现在判断的下标元素所在的节点是1，则把其置为0
                 3）第一步每次开始发起深度优先遍历时，则对应的岛屿的数量+1
         """
+        m = len(grid)
+        n = m and len(grid[0])
+        res = 0
 
-        def helper(grid_: List[List[str]], row_index, col_index):
-            row_len = len(grid)
-            col_len = len(grid[0])
-            # terminator
-            if 0 <= row_index < row_len and 0 <= col_index < col_len and grid_[row_index][col_index] == "1":
-                # process
-                grid_[row_index][col_index] = "0"
+        def helper(x, y):
+            if 0 <= x < m and 0 <= y < n and grid[x][y] == "1":
+                grid[x][y] = "0"
 
-                for tmp_row_index, tmp_col_index in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    new_row_index = row_index + tmp_row_index
-                    new_col_index = col_index + tmp_col_index
-                    # drill down
-                    helper(grid, new_row_index, new_col_index)
+                for tmp_x, tmp_y in cls.DIRECTION:
+                    new_x = tmp_x + x
+                    new_y = tmp_y + y
+                    helper(new_x, new_y)
 
-        ret = 0
-        if grid:
-            m = len(grid)
-            n = len(grid[0])
-            for i in range(m):
-                for j in range(n):
-                    if grid[i][j] == "1":
-                        helper(grid, i, j)
-                        ret += 1
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "1":
+                    res += 1
+                    helper(i, j)
+        return res
 
-        return ret
+    @classmethod
+    def bfs_2(cls, grid):
+        m = len(grid)
+        n = m and len(grid[0])
+
+        res = 0
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "1":
+                    res += 1
+                    grid[i][j] = "0"
+
+                    queue = [(i, j)]
+                    while queue:
+                        tmp_queue = []
+                        for x, y in queue:
+                            for tmp_x, tmp_y in cls.DIRECTION:
+                                new_x = x + tmp_x
+                                new_y = y + tmp_y
+                                if 0 <= new_x < m and 0 <= new_y < n and grid[new_x][new_y] == "1":
+                                    grid[new_x][new_y] = "0"
+                                    tmp_queue.append((new_x, new_y))
+                        queue = tmp_queue
+        return res
 
 
 if __name__ == '__main__':
