@@ -8,7 +8,7 @@
         如果 S 中不存这样的子串，则返回空字符串 ""。
         如果 S 中存在这样的子串，我们保证它是唯一的答案。
 """
-import collections
+from collections import Counter
 
 
 class Solution:
@@ -18,33 +18,30 @@ class Solution:
                 时间复杂度：O(m+n)
                 空间复杂度：O(m+n)
         """
-
-        lookup = collections.defaultdict(int)
-
-        for char in t:
-            lookup[char] += 1
-
+        lookup = Counter(t)
         left = right = 0
-        max_len = float("inf")
+        min_len = float("inf")
         res = ""
-        cnt = len(t)
+        s_size = len(s)
+        t_size = len(t)
 
-        while right <= len(s) - 1:
-            char = s[right]
-            if lookup[char] > 0:
-                cnt -= 1
-            lookup[char] -= 1
+        while right < s_size:
+            right_char = s[right]
+            if lookup[right_char] > 0:
+                t_size -= 1
+            lookup[right_char] -= 1
             right += 1
 
-            while cnt == 0:
-                if right - left < max_len:
-                    max_len = right - left
+            while t_size == 0:
+                left_char = s[left]
+                if right - left < min_len:
+                    min_len = right - left
                     res = s[left:right]
-                if lookup[s[left]] == 0:
-                    cnt += 1
-                lookup[s[left]] += 1
-                left += 1
+                if lookup[left_char] == 0:
+                    t_size += 1
 
+                lookup[left_char] += 1
+                left += 1
         return res
 
 
