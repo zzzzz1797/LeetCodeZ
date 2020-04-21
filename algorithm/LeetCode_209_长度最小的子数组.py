@@ -53,29 +53,35 @@ class Solution:
             while start <= end:
                 mid = (start + end) >> 1
                 mid_val = params[mid]
-                if mid_val == target:
-                    return mid
-                elif mid_val > target:
-                    end = mid - 1
+                if mid_val >= target:
+                    if mid == 0 or params[mid - 1] < target:
+                        return mid
+                    else:
+                        end = mid - 1
                 else:
                     start = mid + 1
             return -1
 
-        size = len(nums)
+        if not (size := len(nums)):
+            return 0
+
+        # 前缀和
         for i in range(1, size):
             nums[i] += nums[i - 1]
 
-        # 如果最后一位都没有s大，那整个数组肯定都不能满足
+        # 判断是否有最后一位是否比目标小，如果最后一位都被目标小，则肯定没有能满足的元素
         if nums[-1] < s:
             return 0
+
+        # 初始化 数据
         res = float("inf")
         nums = [0] + nums
 
-        for i in range(1, len(nums)):
+        for i in range(len(nums)):
             index = mid_query(nums, nums[i] + s)
             if index >= 0 and index - i < res:
                 res = index - i
-        return res
+        return 0 if res == float("inf") else res
 
 
 if __name__ == '__main__':
