@@ -21,24 +21,39 @@ class Solution:
             时间复杂度：O(nlogn)
             空间复杂度：O(n)
         """
+        # res = []
+        # if intervals:
+        #     # 先排序
+        #     intervals.sort(key=lambda i: i[0])
+        #
+        #     # 合并
+        #     res = [intervals[0]]
+        #
+        #     for data in intervals[1:]:
+        #         start, end = data
+        #         check_start, check_end = res[-1]
+        #
+        #         if check_start <= start <= check_end:
+        #             res[-1] = [check_start, max(end, check_end)]
+        #         else:
+        #             res.append([start, end])
+        # return res
         res = []
-        if intervals:
-            # 先排序
-            intervals.sort(key=lambda i: i[0])
 
-            # 合并
-            res = [intervals[0]]
-
-            for data in intervals[1:]:
-                start, end = data
+        for index, detail in enumerate(intervals):
+            if not res:
+                res.append(detail)
+            else:
                 check_start, check_end = res[-1]
+                curr_start, curr_end = detail
 
-                if check_start <= start <= check_end:
-                    res[-1] = [check_start, max(end, check_end)]
+                print(check_start, curr_start, check_end, check_start <= curr_start <= check_end)
+                if check_start <= curr_start <= check_end:
+                    res[-1] = [min(check_start, curr_start), max(check_end, curr_end)]
                 else:
-                    res.append([start, end])
+                    res.append(detail)
         return res
 
 
 if __name__ == '__main__':
-    print(Solution().merge([[1, 3], [2, 6], [8, 10], [15, 18]]))
+    print(Solution().merge([[1, 4], [0, 4]]))

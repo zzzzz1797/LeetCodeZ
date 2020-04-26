@@ -24,6 +24,8 @@ class Solution:
     def solve_2(cls, nums1: List[int], nums2: List[int]) -> float:
         size1 = len(nums1)
         size2 = len(nums2)
+
+        # 不管是两个列表的和是奇数还是偶数，和加上1整除2得到left,和加上2整除2得到right，left和right之间的和整除2就是中文数
         left = (size1 + size2 + 1) // 2
         right = (size1 + size2 + 2) // 2
 
@@ -79,3 +81,35 @@ class Solution:
         if total_size % 2 == 0:
             return (left + right) / 2.0
         return right
+
+    @classmethod
+    def solve_3(cls, nums1: List[int], nums2: List[int]) -> float:
+        size1 = len(nums1)
+        size2 = len(nums2)
+
+        if size1 > size2:
+            return cls.solve_3(nums2, nums1)
+
+        k = (size1 + size2 + 1) // 2
+        left = 0
+        right = size1
+
+        while left < right:
+            m1 = left + (right - left) // 2
+            m2 = k - m1
+            if nums1[m1] < nums2[m2 - 1]:
+                left = m1 + 1
+            else:
+                right = m1
+
+        m1 = left
+        m2 = k - m1
+        left_val = max(nums1[m1 - 1] if m1 > 0 else float("-inf"), nums2[m2 - 1] if m2 > 0 else float("-inf"))
+        if (size1 + size2) % 2 == 1:
+            return left_val
+        right_val = min(nums1[m1] if m1 < size1 else float("inf"), nums2[m2] if m2 < size2 else float("inf"))
+        return (left_val + right_val) / 2
+
+
+if __name__ == '__main__':
+    print(Solution.solve_3([2, 4, 6, 8], [1, 3, 5, 7, 9]))
