@@ -15,7 +15,7 @@ class Solution:
     def nextPermutation(self, nums: List[int]) -> None:
         """
         Do not return anything, modify nums in-place instead.
-
+        字典序 https://zh.wikipedia.org/wiki/%E5%AD%97%E5%85%B8%E5%BA%8F
         思路
             先找出最大的索引 k 满足 nums[k] < nums[k+1]，如果不存在，就翻转整个数组；
             再找出另一个最大索引 l 满足 nums[l] > nums[k]；

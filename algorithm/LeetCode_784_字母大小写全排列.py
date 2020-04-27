@@ -50,7 +50,7 @@ class Solution:
                 res.append(info)
                 return
 
-                # 未修改当前位置的元素
+            # 未修改当前位置的元素
             helper(info, index + 1)
 
             # 修改了当前位置的元素
