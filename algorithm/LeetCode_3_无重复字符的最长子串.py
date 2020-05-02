@@ -30,7 +30,7 @@ class Solution:
             print(i, usedChar, start)
             if s[i] in usedChar and start <= usedChar[s[i]]:
                 start = usedChar[s[i]] + 1
-                print(usedChar[s[i]], start , "ss")
+                print(usedChar[s[i]], start, "ss")
             else:
                 maxLength = max(maxLength, i - start + 1)
 
@@ -38,6 +38,34 @@ class Solution:
 
         return maxLength
 
+    @classmethod
+    def dp(cls, s):
+        """动态规划"""
+        pass
+
+    @classmethod
+    def sliding_windows(cls, s):
+        """
+            滑动窗口
+            思路：
+                1、窗口的右边界先移动，直到窗口中出现重复的元素或者有边界已经超过了给定字符串的长度，在有有边界扩充的时候，记录最大值。
+                2、当有边界停止时，移动左边界，直到窗口中没有重复的元素。跳转到第1步。
+        """
+        used = set()
+        size = len(s)
+        right = -1
+        res = 0
+
+        for i in range(size):
+            if i != 0:
+                used.remove(s[i - 1])
+            while right + 1 < size and s[right + 1] not in used:
+                right += 1
+                used.add(s[right])
+            res = max(res, right - i + 1)
+
+        return res
+
 
 if __name__ == '__main__':
-    print(Solution().lengthOfLongestSubstring("abcdafg"))
+    print(Solution().sliding_windows("abcdafg1"))
