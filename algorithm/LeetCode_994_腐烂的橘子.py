@@ -29,48 +29,39 @@ from typing import List
 
 
 class Solution:
+    DIRECTION = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
     def orangesRotting(self, grid: List[List[int]]) -> int:
-        return self.BFS(grid)
+        return self.bfs(grid)
 
     @classmethod
-    def BFS(cls, grid: List[List[int]]) -> int:
-        # 初始化一些需要的变量
+    def bfs(cls, grid):
+        minutes = 0
+        row_size = len(grid)
+        col_size = row_size and len(grid[0])
 
-        # 总共多少行
-        m = len(grid)
-        # 总共多少列
-        n = len(grid[0])
-        # 用来判断变量是否已经被访问过来了
-        visited = [[False] * n for i in range(m)]
-        # 总共需要花费多少时间
-        minute = 0
-        # 坏橘子的集合
-        fresh_cnt = sum(1 for j in range(n) for i in range(m) if grid[i][j] == 1)
-        stack = [(i, j) for j in range(n) for i in range(m) if grid[i][j] == 2]
-        direction = [(1, 0), (-1, 0), (0, -1), (0, 1)]  # 坏橘子腐烂的四个方向
-
-        if not fresh_cnt:
-            return 0
-        while True:
-            new_stack = []
-            while stack:
-                x, y = stack.pop()  # 拿出一个坏橘子
-                for dx, dy in direction:
-                    new_x, new_y = dx + x, dy + y
-                    if 0 <= new_x < m and 0 <= new_y < n and not visited[new_x][new_y] and grid[new_x][new_y] == 1:
-                        visited[new_x][new_y] = True
-                        grid[new_x][new_y] = 2
-                        new_stack.append((new_x, new_y))
-                        fresh_cnt -= 1
-
-            if not new_stack:
-                break
-            stack = new_stack
-            minute += 1
+        fresh_cnt = sum([1 for j in range(col_size) for i in range(row_size) if grid[i][j] == 1])
         if fresh_cnt:
-            return -1
-        return minute
+            queue = [(i, j) for j in range(col_size) for i in range(row_size) if grid[i][j] == 2]
+            while queue:
+                tmp_queue = []
+
+                for x, y in queue:
+                    for tmp_x, tmp_y in cls.DIRECTION:
+                        new_x = x + tmp_x
+                        new_y = y + tmp_y
+                        if 0 <= new_x < row_size and 0 <= new_y < col_size and grid[new_x][new_y] == 1:
+                            tmp_queue.append([new_x, new_y])
+                            grid[new_x][new_y] = 2
+                            fresh_cnt -= 1
+                queue = tmp_queue
+                if queue:
+                    minutes += 1
+
+        return minutes if not fresh_cnt else -1
 
 
 if __name__ == "__main__":
-    print(Solution().BFS([[2, 1, 1], [0, 1, 1], [1, 0, 1]]))
+    print(Solution().bfs([[2, 1, 1], [0, 1, 1], [1, 0, 1]]))
+    print(Solution().bfs([[0, 2]]))
+    print(Solution().bfs([[2, 1, 1], [1, 1, 0], [0, 1, 1]]))
