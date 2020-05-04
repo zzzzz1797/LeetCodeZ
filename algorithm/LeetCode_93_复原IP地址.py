@@ -61,3 +61,37 @@ class Solution:
 
         helper(0, 4, "")
         return res
+
+
+if __name__ == '__main__':
+    class Solution:
+        def restoreIpAddresses(self, s: str) -> List[str]:
+            return self.recursive(s)
+
+        @classmethod
+        def recursive(cls, s: str) -> List[str]:
+
+            res = []
+            size = len(s)
+
+            def helper(index, level, tmp_res):
+                print(index, level, "ff")
+                if level == 4 and index == size:
+                    res.append(tmp_res[:-1])
+                    return
+
+                if level == 4:
+                    return
+
+                for i in range(index, index + 3):
+                    if size > i:
+                        if i == index and s[i] == "0":
+                            helper(i + 1, level + 1, tmp_res + s[i] + ".")
+                        elif 0 < int(s[index:i + 1]) <= 255:
+                            helper(i + 1, level + 1, tmp_res + s[index:i + 1] + ".")
+
+            helper(0, 0, "")
+            return res
+
+
+print(Solution().restoreIpAddresses("25525511135"))
