@@ -44,8 +44,6 @@ class Solution:
         if K == 1 or N == 0:
             return N
 
-        key = (K, N)
-
         res = float("inf")
         lo = 1
         hi = N
