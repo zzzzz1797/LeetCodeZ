@@ -67,5 +67,5 @@ class Solution:
 
 
 if __name__ == '__main__':
-    print(Solution.solve_1([-1, 0, 3, 5, 9, 9, 9, 9, 9, 12], 9))
+    print(Solution.solve_1([-1, 0, 3, 5, 9, 9, 9, 9, 9, 12], 19))
     print(Solution.solve_2([-1, 0, 3, 5, 9, 9, 9, 9, 9, 12], 9))
