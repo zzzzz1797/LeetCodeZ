@@ -73,6 +73,48 @@ class Solution:
                 return mid
         return -1
 
+    @classmethod
+    def mid_query_1(cls, nums: List[int], target: int) -> List[int]:
+        start_index = cls.query_left(nums, target)
+        print(start_index)
+        end_index = cls.query_right(nums, target)
+        return [start_index, end_index]
+
+    @classmethod
+    def query_left(cls, nums, target):
+        start = 0
+        end = len(nums) - 1
+
+        while start <= end:
+            mid = (start + end) // 2
+            mid_value = nums[mid]
+
+            if mid_value > target:
+                end = mid - 1
+            elif mid_value < target:
+                start = mid + 1
+            else:
+                end = mid - 1
+
+        return start if 0 <= start < len(nums) and nums[start] == target else -1
+
+    @classmethod
+    def query_right(cls, nums, target):
+        start = 0
+        end = len(nums) - 1
+
+        while start <= end:
+            mid = (start + end) // 2
+            mid_value = nums[mid]
+
+            if mid_value > target:
+                end = mid - 1
+            elif mid_value < target:
+                start = mid + 1
+            else:
+                start = mid + 1
+        return end if 0 <= end < len(nums) and nums[end] == target else - 1
+
 
 if __name__ == "__main__":
-    print(Solution().searchRange([2, 2], 2))
+    print(Solution().mid_query_1([1, 2, 2], 2))
