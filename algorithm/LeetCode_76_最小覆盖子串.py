@@ -44,6 +44,43 @@ class Solution:
                 left += 1
         return res
 
+    @classmethod
+    def solve(cls, s: str, t: str) -> str:
+        if not t or not s:
+            return ""
+        t_counter = {}
+        for t_one in t:
+            t_counter[t_one] = t_counter.get(t_one, 0) + 1  # 统计t中元素出现的个数
+        require_cnt = len(t_counter)
+        left = right = 0  # 定义窗口的大小
+        exist_cnt = 0  # 定义已经找到个数
+
+        windows = {}
+
+        res_cnt = float("inf")
+        res = ""
+
+        while right < len(s):
+            ch = s[right]
+            windows[ch] = windows.get(ch, 0) + 1
+
+            if windows[ch] == t_counter.get(ch):
+                exist_cnt += 1
+
+            while left <= right and exist_cnt == require_cnt:
+                ch = s[left]
+                if right - left + 1 < res_cnt:
+                    res_cnt = right - left + 1
+                    res = s[left:right + 1]
+                windows[ch] -= 1
+
+                if windows[ch] < t_counter.get(ch, 0):
+                    exist_cnt -= 1
+
+                left += 1
+            right += 1
+        return res
+
 
 if __name__ == '__main__':
-    print(Solution().minWindow("ADOBECODEBANC", "ABC"))
+    print(Solution().solve("aa", "aa"))
