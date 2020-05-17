@@ -27,8 +27,21 @@ class TreeNode:
 
 class Solution:
     def inorderSuccessor(self, root: TreeNode, p: TreeNode) -> TreeNode:
-        pass
+        return self.solve_1(root, p)
 
     @classmethod
     def solve_1(cls, root: TreeNode, p: TreeNode) -> TreeNode:
-        pass
+        stack = []
+        check = float("-inf")
+
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.left
+
+            node = stack.pop()
+            if check == p.val:
+                return node
+            # 记录上一次的值
+            check = node.val
+            root = node.right
