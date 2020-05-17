@@ -55,3 +55,31 @@ class Solution:
         if len(result) != numCourses:
             result = []
         return result
+
+    @classmethod
+    def solve_2(cls, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        sides = [0 for i in range(numCourses)]
+        tips = [[] for i in range(numCourses)]
+
+        for cur, pre in prerequisites:
+            sides[cur] += 1
+            tips[pre].append(cur)
+
+        queue = [i for i in range(len(sides)) if sides[i] == 0]
+        result = []
+        while queue:
+            tmp_queue = []
+            for cur in queue:
+                result.append(cur)
+                for tmp in tips[cur]:
+                    sides[tmp] -= 1
+                    if sides[tmp] == 0:
+                        tmp_queue.append(tmp)
+            queue = tmp_queue
+
+        return result if len(result) == numCourses else []
+
+
+if __name__ == '__main__':
+    print(Solution.solve_1(2, []))
+    print(Solution.solve_2(2, []))
