@@ -44,10 +44,8 @@ class Solution:
             for i in range(row_size * col_size):
                 res.append(matrix[r][c])
                 visited[r][c] = True
-
                 cr = r + dr[di]
                 cc = c + dc[di]
-
                 if 0 <= cr < row_size and 0 <= cc < col_size and not visited[cr][cc]:
                     r = cr
                     c = cc
@@ -56,3 +54,40 @@ class Solution:
                     r = r + dr[di]
                     c = c + dc[di]
         return res
+
+    @classmethod
+    def solve_2(cls, matrix: List[List[int]]) -> List[int]:
+        res = []
+        if matrix:
+            row_size = len(matrix)
+            col_size = len(matrix[0])
+            # 方向
+            choices = (
+                (0, 1),  # 往左走
+                (1, 0),  # 往下走
+                (0, -1),  # 往右走
+                (-1, 0)  # 往上走
+            )
+            # 记录是否已经走过了
+            visited = [[False for i in range(col_size)] for j in range(row_size)]
+            # 开始下标以及方向的下标
+            row_index = col_index = start_index = 0
+            for i in range(row_size * col_size):
+                visited[row_index][col_index] = True
+                res.append(matrix[row_index][col_index])
+                new_row_index = row_index + choices[start_index][0]
+                new_col_index = col_index + choices[start_index][1]
+                if 0 <= new_row_index < row_size and 0 <= new_col_index < col_size and not visited[new_row_index][
+                    new_col_index]:
+                    row_index = new_row_index
+                    col_index = new_col_index
+                else:
+                    start_index = (start_index + 1) % 4
+                    row_index = row_index + choices[start_index][0]
+                    col_index = col_index + choices[start_index][1]
+        return res
+
+
+if __name__ == '__main__':
+    print(Solution.solve_1([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]))
+    print(Solution.solve_2([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]))
