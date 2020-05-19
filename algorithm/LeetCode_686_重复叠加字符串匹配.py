@@ -10,3 +10,7 @@
 class Solution:
     def repeatedStringMatch(self, A: str, B: str) -> int:
         pass
+
+    @classmethod
+    def solve_1(cls, A: str, B: str) -> int:
+        pass
