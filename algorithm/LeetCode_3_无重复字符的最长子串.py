@@ -27,10 +27,8 @@ class Solution:
         usedChar = {}
 
         for i in range(len(s)):
-            print(i, usedChar, start)
             if s[i] in usedChar and start <= usedChar[s[i]]:
                 start = usedChar[s[i]] + 1
-                print(usedChar[s[i]], start, "ss")
             else:
                 maxLength = max(maxLength, i - start + 1)
 
@@ -40,8 +38,27 @@ class Solution:
 
     @classmethod
     def dp(cls, s):
-        """动态规划"""
-        pass
+        """
+            动态规划
+            dp[i] 表示是 以s[i]结尾的最长不重复子串
+        """
+        size = len(s)
+
+        if size < 2:
+            return size
+        dp = [1 for i in range(size)]
+        mapping = {s[0]: 0}
+
+        for i in range(1, size):
+            if s[i] in mapping:
+                if dp[i - 1] >= i - mapping[s[i]]:
+                    dp[i] = i - mapping[s[i]]
+                else:
+                    dp[i] = dp[i - 1] + 1
+            else:
+                dp[i] = dp[i - 1] + 1
+            mapping[s[i]] = i
+        return max(dp)
 
     @classmethod
     def sliding_windows(cls, s):
