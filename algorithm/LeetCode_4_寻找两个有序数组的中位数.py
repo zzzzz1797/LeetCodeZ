@@ -22,34 +22,41 @@ class Solution:
 
     @classmethod
     def solve_2(cls, nums1: List[int], nums2: List[int]) -> float:
+        """
+            保证剔除的数总是在第k小数的左边
+        """
         size1 = len(nums1)
         size2 = len(nums2)
 
-        # 不管是两个列表的和是奇数还是偶数，和加上1整除2得到left,和加上2整除2得到right，left和right之间的和整除2就是中文数
         left = (size1 + size2 + 1) // 2
         right = (size1 + size2 + 2) // 2
 
-        def get_k(l1, r1, l2, r2, n1, n2, target):
-            len1 = r1 - l1 + 1
-            len2 = r2 - l2 + 1
-            # n1 始终小于n2 如果有数组空肯定是n1
-            if len1 > len2:
-                return get_k(l2, r2, l1, r1, n2, n1, target)
-            if len1 == 0:
-                return n2[l2 + target - 1]
-            if target == 1:
-                return min(nums1[l1], nums2[l2])
-
-            i = l1 + min(len1, target // 2) - 1
-            j = l2 + min(len2, target // 2) - 1
-
-            if nums1[i] > nums2[j]:
-                return get_k(l1, r1, j + 1, r2, n1, n2, target - (j - l2 + 1))
-            return get_k(i + 1, r1, l2, r2, n1, n2, target - (i - l1 + 1))
-
-        res = get_k(0, size1 - 1, 0, size2 - 2, nums1, nums2, left) + get_k(0, size1 - 1, 0, size2 - 2, nums1, nums2,
-                                                                            right)
+        res = cls.get_k(0, size1 - 1, 0, size2 - 1, nums1, nums2, left) + cls.get_k(0, size1 - 1, 0, size2 - 1, nums1,
+                                                                                    nums2, right)
         return res / 2
+
+    @classmethod
+    def get_k(cls, left1, right1, left2, right2, nums1, nums2, target):
+        len1 = right1 - left1 + 1
+        len2 = right2 - left2 + 1
+
+        # 始终保持nums2列表里面有值，即有一个空数组也是nums1
+        if len1 > len2:
+            return cls.get_k(left2, right2, left1, right1, nums2, nums1, target)
+
+        if len1 == 0:
+            return nums2[left2 + target - 1]
+
+        if target == 1:
+            return min(nums1[left1], nums2[left2])
+
+        i = left1 + min(len1, target // 2) - 1
+        j = left2 + min(len2, target // 2) - 1
+
+        if nums1[i] > nums2[j]:
+            return cls.get_k(left1, right1, j + 1, right2, nums1, nums2, target - (j - left2 + 1))
+
+        return cls.get_k(i + 1, right1, left2, right2, nums1, nums2, target - (i - left1 + 1))
 
     @classmethod
     def solve_1(cls, nums1: List[int], nums2: List[int]) -> float:
