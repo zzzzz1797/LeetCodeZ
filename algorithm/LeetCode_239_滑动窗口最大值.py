@@ -58,11 +58,12 @@ class Solution:
                     dq.pop()
 
                 while dq and dq[0] <= index - k:
-                    # 该元素已经被淘汰了
+                    # 淘汰头部元素
                     dq.popleft()
 
                 dq.append(index)
                 if index >= k - 1:
+                    #  保证窗口进满
                     res.append(nums[dq[0]])
         return res
 
