@@ -86,21 +86,15 @@ class LRUCache:
 
     @classmethod
     def remove_node(cls, node: DoubleLinkNode):
-        prev_node = node.prev
-        next_node = node.next
-
-        prev_node.next = next_node
-        next_node.prev = prev_node
+        node.prev.next = node.next
+        node.next.prev = node.prev
 
     def add_to_head(self, node: DoubleLinkNode):
         # 取出真正的头节点
-        true_head = self.head.next
-
         node.prev = self.head
-        node.next = true_head
-
+        node.next = self.head.next
+        self.head.next.prev = node
         self.head.next = node
-        true_head.prev = node
 
     def pop_tail(self) -> DoubleLinkNode:
         prev_node = self.tail.prev
