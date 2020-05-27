@@ -21,13 +21,29 @@ class Solution:
         right = len(nums) - 1
 
         while left < right:
-            print(left, right)
             mid = (left + right) // 2
             if nums[mid] > nums[right]:
                 left = mid + 1
             else:
                 right = mid
 
+        return nums[left]
+
+    @classmethod
+    def solve_1(cls, nums: List[int]) -> int:
+        """
+            为什么左右不对称？只比较mid与right?
+            https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/solution/er-fen-cha-zhao-wei-shi-yao-zuo-you-bu-dui-cheng-z/
+        """
+        left = 0
+        right = len(nums) - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+            if nums[mid] > nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
         return nums[left]
 
 
