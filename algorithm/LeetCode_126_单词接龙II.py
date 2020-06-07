@@ -30,9 +30,48 @@
 
         输出: []
 """
+from collections import deque, defaultdict
 from typing import List
 
 
 class Solution:
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
-        pass
+        return self.solve_1(beginWord, endWord, wordList)
+
+    @classmethod
+    def solve_1(cls, begin_word: str, end_word: str, word_list: List[str]) -> List[List[str]]:
+        size = len(begin_word)
+
+        # 1. 先将word_list 构建成一个模糊单词的映射关系表
+        word_dict = defaultdict(list)
+        for word in word_list:
+            for index in range(size):
+                blur_word = word[:index] + "*" + word[index + 1:]
+                word_dict[blur_word].append(word)
+        # 2. 广度有限遍历
+        queue = deque([(begin_word, 1)])
+        founded = {begin_word: 1}
+        pre_words = defaultdict(list)
+        while queue:
+            cur_word, cur_level = queue.popleft()
+            for i in range(size):
+                blur_word = cur_word[:i] + "*" + cur_word[i + 1:]
+                for word in word_dict.get(blur_word, []):
+                    if word not in founded:
+                        founded[word] = cur_level + 1
+                        queue.append((word, cur_level + 1))
+                    if founded[word] == cur_level + 1:
+                        pre_words[word].append(cur_word)
+            if end_word in founded and cur_level + 1 > founded[end_word]:
+                break
+        if end_word in founded:
+            res = [[end_word]]
+
+            while res[0][0] != begin_word:
+                res = [[word] + r for r in res for word in pre_words[r[0]]]
+            return res
+        return []
+
+
+if __name__ == '__main__':
+    print(Solution.solve_1("hit", "cog", ["hot", "dot", "dog", "lot", "log", "cog"]))
